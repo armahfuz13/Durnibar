@@ -10,16 +10,13 @@ import { AnimatedButton } from './AnimatedButton';
 
 export const MemoriesSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    if (isPaused) return;
-
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % galleryImages.length);
     }, 2000);
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, []);
 
   return (
     <section className="py-20 px-4 overflow-hidden" id="gallery">
@@ -65,11 +62,6 @@ export const MemoriesSection = () => {
             return (
               <motion.div
                 key={src || i}
-                onMouseEnter={() => diff === 0 && setIsPaused(true)}
-                onMouseLeave={() => diff === 0 && setIsPaused(false)}
-                onTouchStart={() => diff === 0 && setIsPaused(true)}
-                onTouchEnd={() => diff === 0 && setIsPaused(false)}
-                onTouchCancel={() => diff === 0 && setIsPaused(false)}
                 initial={false}
                 animate={{ 
                   opacity: 1, 
