@@ -54,15 +54,6 @@ export const HeroSection = () => {
               referrerPolicy="no-referrer"
               priority
             />
-            
-            {/* Pill Badge */}
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-              className="absolute top-4 left-1/2 -translate-x-1/2 bg-white/20 backdrop-blur-md px-6 py-2 rounded-full border border-white/40 shadow-lg text-white font-bold tracking-wide"
-            >
-              30 MEMBERS
-            </motion.div>
           </motion.div>
         </div>
 
