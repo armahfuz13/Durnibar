@@ -47,7 +47,7 @@ export const HeroSection = () => {
             className="relative w-full aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden shadow-2xl border-4 border-[#12314a]"
           >
             <Image
-              src="/images/Hero-cover.jpg"
+              src="public/images/Hero-cover.jpg"
               alt="Durnibar 06 Batch"
               fill
               className="object-cover"
