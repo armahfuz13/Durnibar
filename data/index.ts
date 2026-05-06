@@ -1,10 +1,10 @@
 export const navLinks = [
-  { label: 'Home', href: '#' },
-  { label: 'Member', href: '#member' },
-  { label: 'Event', href: '#event' },
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Blog', href: '#blog' },
-  { label: 'Achievements', href: '#achievements' },
+  { label: 'Home', href: '/' },
+  { label: 'Member', href: '/members' },
+  { label: 'Event', href: '/#event' },
+  { label: 'Gallery', href: '/#gallery' },
+  { label: 'Blog', href: '/#blog' },
+  { label: 'Achievements', href: '/#achievements' },
 ];
 
 export const semesterNumbers = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -19,13 +19,13 @@ export const representatives = [
   },
   {
     role: 'Class Representative',
-    name: 'Md Younus Ali',
+    name: 'MD. YOUNUS ALI',
     image: '/images/cr-male.jpg',
     type: 'accent',
   },
   {
     role: 'Class Representative',
-    name: 'Sadia Rafat Ontora',
+    name: 'SADIA RAFAT ONTORA',
     image: '/images/cr-female.jpg',
     type: 'dark',
   },
