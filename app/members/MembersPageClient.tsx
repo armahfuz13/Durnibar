@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { members, Member } from '@/data/members';
 import Image from 'next/image';
-import { Search, MapPin, Facebook, Mail, MessageCircle, X, ChevronUp, ChevronDown } from 'lucide-react';
+import { Search, MapPin, Facebook, Mail, MessageCircle, X, ChevronUp, ChevronDown, Droplet } from 'lucide-react';
 
 type SortOption = 'a-z' | 'z-a' | 'id';
 type FilterOption = 'all' | 'male' | 'female' | 'cr';
@@ -15,10 +15,18 @@ export function MembersPageClient() {
   const [sort, setSort] = useState<SortOption>('id');
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [isModalAtBottom, setIsModalAtBottom] = useState(false);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     if (selectedMember) {
-      setIsModalAtBottom(false);
+      setTimeout(() => {
+        if (scrollRef.current) {
+          const el = scrollRef.current;
+          setIsModalAtBottom(el.scrollHeight <= el.clientHeight + 15);
+        } else {
+          setIsModalAtBottom(false);
+        }
+      }, 50);
     }
   }, [selectedMember]);
 
@@ -34,7 +42,7 @@ export function MembersPageClient() {
   }, []);
 
   const filteredAndSortedMembers = useMemo(() => {
-    let result = [...members].filter(m => m.id !== '2202020' && m.id !== '2302041');
+    let result = [...members];
 
     // Search
     if (search.trim()) {
@@ -216,7 +224,7 @@ export function MembersPageClient() {
                       </a>
                     )}
                     {member.email && (
-                      <a href={`mailto:${member.email}`} className="p-2.5 rounded-full bg-white/5 text-gray-300 border border-white/10 hover:bg-[#EA4335] hover:text-white hover:border-[#EA4335] transition-colors">
+                      <a href={`mailto:${member.email.trim()}`} className="p-2.5 rounded-full bg-white/5 text-gray-300 border border-white/10 hover:bg-[#EA4335] hover:text-white hover:border-[#EA4335] transition-colors">
                         <Mail className="w-4 h-4" />
                       </a>
                     )}
@@ -232,61 +240,6 @@ export function MembersPageClient() {
             No members found matching your search or filters.
           </div>
         )}
-      </motion.div>
-
-      {/* Special Members Section */}
-      <motion.div layout className="mt-24">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold uppercase tracking-widest text-white mb-2">Special Members</h2>
-          <div className="w-24 h-1 bg-[#e60046] mx-auto rounded-full"></div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto gap-6">
-          {members.filter(m => m.id === '2202020' || m.id === '2302041').map(member => (
-            <motion.div
-              key={member.id}
-              layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3 }}
-              whileHover={{ y: -5 }}
-              onClick={() => setSelectedMember(member)}
-              className="relative rounded-3xl p-6 bg-[#183858] border border-[#e60046]/50 shadow-[0_0_15px_rgba(230,0,70,0.1)] bg-gradient-to-b from-[#e60046]/10 to-[#183858] cursor-pointer group transition-all overflow-hidden"
-            >
-              <div className="flex flex-col items-center text-center">
-                <div className="relative w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-[#e60046] shadow-lg group-hover:scale-105 transition-transform">
-                  {member.photo_url ? (
-                    <Image 
-                      src={member.photo_url} 
-                      alt={member.name} 
-                      fill 
-                      className="object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-[#0f2a40] flex items-center justify-center text-2xl font-bold text-gray-400">
-                      {member.name.charAt(0)}
-                    </div>
-                  )}
-                </div>
-                <h3 className="text-xl font-bold text-white mb-1 group-hover:text-[#e60046] transition-colors line-clamp-1">{member.name}</h3>
-                <p className="text-gray-400 font-mono text-sm mb-4">ID: {member.id}</p>
-                <div className="flex items-center gap-3 mt-auto relative z-10" onClick={(e) => e.stopPropagation()}>
-                  {member.facebook_url && (
-                    <a href={member.facebook_url} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-full bg-white/5 text-gray-300 border border-white/10 hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition-colors">
-                      <Facebook className="w-4 h-4" />
-                    </a>
-                  )}
-                  {member.email && (
-                    <a href={`mailto:${member.email}`} className="p-2.5 rounded-full bg-white/5 text-gray-300 border border-white/10 hover:bg-[#EA4335] hover:text-white hover:border-[#EA4335] transition-colors">
-                      <Mail className="w-4 h-4" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
       </motion.div>
 
       {/* Back to top */}
@@ -354,12 +307,22 @@ export function MembersPageClient() {
                 </div>
 
                 <div 
+                  ref={scrollRef}
                   className="p-5 sm:p-6 pt-3 overflow-y-auto scroll-smooth overscroll-contain"
                   onScroll={(e) => {
                     const target = e.target as HTMLDivElement;
                     setIsModalAtBottom(target.scrollHeight - target.scrollTop <= target.clientHeight + 15);
                   }}
                 >
+                  {selectedMember.blood_group && (
+                    <div className="flex items-center gap-2 mb-4 bg-[#e63946] w-fit px-3 py-1.5 rounded-full border border-white/10 shadow-sm">
+                      <Droplet className="w-3.5 h-3.5 text-white fill-white/20" />
+                      <span className="text-xs font-bold text-white tracking-wide">
+                        Blood Group [ {selectedMember.blood_group} ]
+                      </span>
+                    </div>
+                  )}
+
                   {selectedMember.hometown && (
                     <div className="flex items-center gap-2 text-gray-300 mb-4 bg-white/5 p-3 rounded-xl border border-white/5">
                       <MapPin className="w-4 h-4 text-[#e60046]" />
@@ -381,16 +344,17 @@ export function MembersPageClient() {
                         <span className="hidden sm:inline">Facebook</span>
                       </a>
                     )}
-                    {selectedMember.email && (
-                      <a href={`mailto:${selectedMember.email}`} className="flex-1 min-w-[100px] flex items-center justify-center gap-2 bg-white/10 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-white/20 transition-colors border border-white/10">
-                        <Mail className="w-4 h-4" />
-                        <span className="hidden sm:inline">Email</span>
-                      </a>
-                    )}
                     {selectedMember.whatsapp && (
-                      <a href={`https://wa.me/${selectedMember.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 min-w-[100px] flex items-center justify-center gap-2 bg-[#25D366] text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-[#20bd5a] transition-colors">
+                      <a href={`https://wa.me/${selectedMember.whatsapp.replace(/[^0-9]/g, '').startsWith('88') ? selectedMember.whatsapp.replace(/[^0-9]/g, '') : '88' + selectedMember.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 min-w-[100px] flex items-center justify-center gap-2 bg-[#25D366] text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-[#20bd5a] transition-colors">
                         <MessageCircle className="w-4 h-4" />
                         <span className="hidden sm:inline">WhatsApp</span>
+                      </a>
+                    )}
+                    {selectedMember.email && (
+                      <a href={`mailto:${selectedMember.email.trim()}`} className="flex-1 sm:flex-none sm:w-full min-w-[100px] flex items-center justify-center gap-2 bg-white/10 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-white/20 transition-colors border border-white/10">
+                        <Mail className="w-4 h-4" />
+                        <span className="hidden sm:inline">{selectedMember.email.trim()}</span>
+                        <span className="sm:hidden">Email</span>
                       </a>
                     )}
                   </div>
