@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { members, Member } from '@/data/members';
 import Image from 'next/image';
-import { Search, MapPin, Facebook, Mail, MessageCircle, X, ChevronUp } from 'lucide-react';
+import { Search, MapPin, Facebook, Mail, MessageCircle, X, ChevronUp, ChevronDown } from 'lucide-react';
 
 type SortOption = 'a-z' | 'z-a' | 'id';
 type FilterOption = 'all' | 'male' | 'female' | 'cr';
@@ -14,6 +14,13 @@ export function MembersPageClient() {
   const [filter, setFilter] = useState<FilterOption>('all');
   const [sort, setSort] = useState<SortOption>('id');
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [isModalAtBottom, setIsModalAtBottom] = useState(false);
+
+  React.useEffect(() => {
+    if (selectedMember) {
+      setIsModalAtBottom(false);
+    }
+  }, [selectedMember]);
 
   const stats = useMemo(() => {
     const total = members.length;
@@ -78,7 +85,7 @@ export function MembersPageClient() {
   }, []);
 
   return (
-    <div className="pt-8 pb-20 px-4 max-w-7xl mx-auto relative min-h-screen">
+    <div className="pt-24 pb-20 px-4 lg:px-12 max-w-5xl mx-auto relative min-h-screen">
       {/* Header Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -106,7 +113,7 @@ export function MembersPageClient() {
 
       {/* Filter & Search Bar - Sticky */}
       <div className="bg-[#0f2a40] py-4 mb-8 border-b border-white/10 -mx-4 px-4 sm:mx-0 sm:px-0">
-        <div className="flex flex-col md:flex-row items-center gap-4 justify-between max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row items-center gap-4 justify-between max-w-5xl mx-auto">
           <div className="relative w-full md:w-80">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
@@ -148,7 +155,7 @@ export function MembersPageClient() {
             </select>
           </div>
         </div>
-        <div className="mt-4 text-center md:text-left text-sm text-gray-400 max-w-7xl mx-auto">
+        <div className="mt-4 text-center md:text-left text-sm text-gray-400 max-w-5xl mx-auto">
           Showing {filteredAndSortedMembers.length} of {stats.total} members
         </div>
       </div>
@@ -313,16 +320,16 @@ export function MembersPageClient() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-[#183858] border border-white/10 w-full max-w-md rounded-2xl overflow-hidden shadow-2xl relative my-4 max-h-[90vh] flex flex-col"
+                className="bg-[#183858] border border-white/10 w-full max-w-[380px] rounded-2xl overflow-hidden shadow-2xl relative my-4 max-h-[85vh] flex flex-col"
               >
                 <button 
                   onClick={() => setSelectedMember(null)}
-                  className="absolute top-4 right-4 z-10 p-2 bg-black/20 hover:bg-black/40 rounded-full text-white/70 hover:text-white transition-colors backdrop-blur-md"
+                  className="absolute top-3 right-3 z-10 p-1.5 bg-black/20 hover:bg-black/40 rounded-full text-white/70 hover:text-white transition-colors backdrop-blur-md"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
 
-                <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] bg-[#0f2a40] shrink-0">
+                <div className="relative w-full aspect-[4/3] bg-[#0f2a40] shrink-0">
                   {selectedMember.photo_url ? (
                     <Image 
                       src={selectedMember.photo_url} 
@@ -332,56 +339,80 @@ export function MembersPageClient() {
                       referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-7xl font-bold text-gray-500">
+                    <div className="absolute inset-0 flex items-center justify-center text-5xl font-bold text-gray-500">
                       {selectedMember.name.charAt(0)}
                     </div>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#183858] via-[#183858]/40 to-transparent" />
                   
-                  <div className="absolute bottom-0 left-0 w-full p-6 pt-20">
-                    <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2 leading-tight">
+                  <div className="absolute bottom-0 left-0 w-full p-5 pt-16">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-1 leading-tight">
                       {selectedMember.name}
                     </h2>
-                    <p className="text-gray-300 font-mono text-lg">ID: {selectedMember.id}</p>
+                    <p className="text-gray-300 font-mono text-sm sm:text-base">ID: {selectedMember.id}</p>
                   </div>
                 </div>
 
-                <div className="p-6 sm:p-8 pt-4 overflow-y-auto">
+                <div 
+                  className="p-5 sm:p-6 pt-3 overflow-y-auto scroll-smooth overscroll-contain"
+                  onScroll={(e) => {
+                    const target = e.target as HTMLDivElement;
+                    setIsModalAtBottom(target.scrollHeight - target.scrollTop <= target.clientHeight + 15);
+                  }}
+                >
                   {selectedMember.hometown && (
-                    <div className="flex items-center gap-3 text-gray-300 mb-6 bg-white/5 p-4 rounded-2xl border border-white/5">
-                      <MapPin className="w-5 h-5 text-[#e60046]" />
-                      <span className="text-lg">{selectedMember.hometown}</span>
+                    <div className="flex items-center gap-2 text-gray-300 mb-4 bg-white/5 p-3 rounded-xl border border-white/5">
+                      <MapPin className="w-4 h-4 text-[#e60046]" />
+                      <span className="text-sm sm:text-base">{selectedMember.hometown}</span>
                     </div>
                   )}
 
-                  <div className="space-y-4 mb-8">
-                    <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Fun Fact</h4>
-                    <p className="text-gray-300 italic bg-black/20 p-4 rounded-xl">
+                  <div className="space-y-2 mb-6">
+                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Fun Fact</h4>
+                    <p className="text-sm text-gray-300 italic bg-black/20 p-3 rounded-lg">
                       Waiting to be filled with an amazing story...
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-3 mt-6">
+                  <div className="flex flex-wrap gap-2 mt-4">
                     {selectedMember.facebook_url && (
-                      <a href={selectedMember.facebook_url} target="_blank" rel="noopener noreferrer" className="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-[#1877F2] text-white py-3 px-4 rounded-xl font-medium hover:bg-[#1864cc] transition-colors">
-                        <Facebook className="w-5 h-5" />
+                      <a href={selectedMember.facebook_url} target="_blank" rel="noopener noreferrer" className="flex-1 min-w-[100px] flex items-center justify-center gap-2 bg-[#1877F2] text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-[#1864cc] transition-colors">
+                        <Facebook className="w-4 h-4" />
                         <span className="hidden sm:inline">Facebook</span>
                       </a>
                     )}
                     {selectedMember.email && (
-                      <a href={`mailto:${selectedMember.email}`} className="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-white/10 text-white py-3 px-4 rounded-xl font-medium hover:bg-white/20 transition-colors border border-white/10">
-                        <Mail className="w-5 h-5" />
+                      <a href={`mailto:${selectedMember.email}`} className="flex-1 min-w-[100px] flex items-center justify-center gap-2 bg-white/10 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-white/20 transition-colors border border-white/10">
+                        <Mail className="w-4 h-4" />
                         <span className="hidden sm:inline">Email</span>
                       </a>
                     )}
                     {selectedMember.whatsapp && (
-                      <a href={`https://wa.me/${selectedMember.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-[#25D366] text-white py-3 px-4 rounded-xl font-medium hover:bg-[#20bd5a] transition-colors">
-                        <MessageCircle className="w-5 h-5" />
+                      <a href={`https://wa.me/${selectedMember.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 min-w-[100px] flex items-center justify-center gap-2 bg-[#25D366] text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-[#20bd5a] transition-colors">
+                        <MessageCircle className="w-4 h-4" />
                         <span className="hidden sm:inline">WhatsApp</span>
                       </a>
                     )}
                   </div>
                 </div>
+
+                <AnimatePresence>
+                  {!isModalAtBottom && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute bottom-0 left-0 w-full h-20 pointer-events-none bg-gradient-to-t from-[#183858] via-[#183858]/80 to-transparent flex items-end justify-center pb-2 z-10 rounded-b-2xl"
+                    >
+                      <motion.div
+                        animate={{ y: [0, 4, 0] }}
+                        transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                      >
+                        <ChevronDown className="w-5 h-5 text-white/50 drop-shadow-md" />
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             </motion.div>
           </>
