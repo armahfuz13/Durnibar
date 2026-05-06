@@ -1,18 +1,39 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { SectionLabel } from './SectionLabel';
 import { Calendar } from 'lucide-react';
 import { semesterNumbers, currentSemester } from '@/data';
 
 export const SemesterTimeline = () => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const activeItemRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerWidth < 768 && scrollContainerRef.current && activeItemRef.current) {
+        const container = scrollContainerRef.current;
+        const activeItem = activeItemRef.current;
+        const scrollLeft = activeItem.offsetLeft - (container.clientWidth / 2) + (activeItem.clientWidth / 2);
+        container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+      }
+    };
+    
+    // We can do it on mount after a small delay to make sure layout is done
+    const timer = setTimeout(handleScroll, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <section className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <SectionLabel label="CURRENT SEMESTER" icon={<Calendar size={16} />} />
 
-        <div className="relative mt-16 pb-10 overflow-x-auto no-scrollbar scroll-smooth">
+        <div 
+          ref={scrollContainerRef}
+          className="relative mt-16 pb-10 overflow-x-auto no-scrollbar scroll-smooth"
+        >
           <div className="min-w-[800px] flex items-center justify-between relative px-10">
             {/* Background Lines */}
             <div className="absolute top-1/2 left-10 right-10 -translate-y-1/2 h-1 bg-white/20 -z-10" />
@@ -31,7 +52,11 @@ export const SemesterTimeline = () => {
               const isPast = num < currentSemester;
 
               return (
-                <div key={num} className="relative flex flex-col items-center">
+                <div 
+                  key={num} 
+                  ref={isActive ? activeItemRef : null}
+                  className="relative flex flex-col items-center"
+                >
                   <motion.div
                     initial={{ scale: 0 }}
                     whileInView={{ scale: 1 }}
