@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { AnimatedButton } from './AnimatedButton';
 
 export const HeroSection = () => {
@@ -63,7 +64,9 @@ export const HeroSection = () => {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="mt-[-20px] relative z-10"
         >
-          <AnimatedButton variant="primary">Meet The Members</AnimatedButton>
+          <Link href="/members">
+            <AnimatedButton variant="primary">Meet The Members</AnimatedButton>
+          </Link>
         </motion.div>
       </div>
     </section>
