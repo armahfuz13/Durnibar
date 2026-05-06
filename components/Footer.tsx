@@ -27,7 +27,7 @@ export const Footer = () => {
 
         {/* Social Icons */}
         <div className="flex justify-center gap-4 mb-12">
-          <Link href="#" className="w-12 h-12 rounded-full bg-[#1877f2]/20 text-[#1877f2] flex items-center justify-center hover:bg-[#1877f2] hover:text-white transition-all transform hover:scale-110 border border-[#1877f2]/30">
+          <Link href="https://www.facebook.com/profile.php?id=61582993750818" target="_blank" className="w-12 h-12 rounded-full bg-[#1877f2]/20 text-[#1877f2] flex items-center justify-center hover:bg-[#1877f2] hover:text-white transition-all transform hover:scale-110 border border-[#1877f2]/30">
             <Facebook size={20} />
           </Link>
           <Link href="#" className="w-12 h-12 rounded-full bg-[#e1306c]/20 text-[#e1306c] flex items-center justify-center hover:bg-[#e1306c] hover:text-white transition-all transform hover:scale-110 border border-[#e1306c]/30">
