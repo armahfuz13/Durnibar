@@ -50,8 +50,9 @@ export const Navbar = () => {
         {/* Social & Mobile Menu Toggle */}
         <div className="flex items-center gap-4">
           <Link
-            href="#"
+            href="https://www.facebook.com/profile.php?id=61582993750818"
             className="hidden md:flex bg-[#1877f2] hover:bg-[#166fe5] text-white p-2 rounded-full transition-colors"
+            target="_blank"
           >
             <Facebook size={18} />
           </Link>
@@ -85,8 +86,9 @@ export const Navbar = () => {
                 </Link>
               ))}
               <Link
-                href="#"
+                href="https://www.facebook.com/profile.php?id=61582993750818"
                 className="w-fit bg-[#1877f2] hover:bg-[#166fe5] text-white p-2 rounded-full transition-colors"
+                target="_blank"
               >
                 <Facebook size={20} />
               </Link>
