@@ -7,10 +7,12 @@ import { MemoriesSection } from '@/components/MemoriesSection';
 import { BlogAchievementsSection } from '@/components/BlogAchievementsSection';
 import { CTASection } from '@/components/CTASection';
 import { Footer } from '@/components/Footer';
+import { HomePopupController } from '@/components/HomePopupController';
 
 export default function Home() {
   return (
     <main className="font-sans antialiased text-white">
+      <HomePopupController />
       <Navbar />
       <HeroSection />
       <SemesterTimeline />

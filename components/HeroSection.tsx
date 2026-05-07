@@ -5,8 +5,16 @@ import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatedButton } from './AnimatedButton';
+import { useRouter } from 'next/navigation';
 
 export const HeroSection = () => {
+  const router = useRouter();
+
+  const handleMeetMembersClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push('/?membersBlocked=true');
+  };
+
   return (
     <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 px-4 overflow-hidden" id="home">
       {/* Background blobs */}
@@ -64,9 +72,9 @@ export const HeroSection = () => {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="mt-[-20px] relative z-10"
         >
-          <Link href="/members">
+          <a href="/members" onClick={handleMeetMembersClick}>
             <AnimatedButton variant="primary">Meet The Members</AnimatedButton>
-          </Link>
+          </a>
         </motion.div>
       </div>
     </section>
