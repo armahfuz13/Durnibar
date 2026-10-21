@@ -10,9 +10,9 @@ export function middleware(request: NextRequest) {
     (path) => pathname === path || pathname.startsWith(`${path}/`)
   );
 
-  if (isBlockedMembersRoute) {
+  /*if (isBlockedMembersRoute) {
     return NextResponse.redirect(new URL('/?membersBlocked=true', request.url));
-  }
+  }*/
 
   return NextResponse.next();
 }

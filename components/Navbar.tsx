@@ -14,12 +14,12 @@ export const Navbar = () => {
   const router = useRouter();
 
   const handleNavLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href === '/members' || href === '/member') {
+    /*if (href === '/members' || href === '/member') {
       e.preventDefault();
       router.push('/?membersBlocked=true');
       setMobileMenuOpen(false);
     }
-  };
+  };*/
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,7 +49,7 @@ export const Navbar = () => {
             <Link
               key={link.label}
               href={link.href}
-              onClick={(e) => handleNavLinkClick(e, link.href)}
+              /*onClick={(e) => handleNavLinkClick(e, link.href)}*/
               className="text-gray-300 hover:text-white transition-colors relative group text-sm lg:text-base font-medium px-2 py-1"
             >
               {link.label}
@@ -91,12 +91,12 @@ export const Navbar = () => {
                   key={link.label}
                   href={link.href}
                   className="text-gray-300 hover:text-white font-medium text-lg"
-                  onClick={(e) => {
+                  /*onClick={(e) => {
                     handleNavLinkClick(e, link.href);
                     if (link.href !== '/members' && link.href !== '/member') {
                       setMobileMenuOpen(false);
                     }
-                  }}
+                  }}*/
                 >
                   {link.label}
                 </Link>
