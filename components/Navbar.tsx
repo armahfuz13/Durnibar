@@ -18,8 +18,8 @@ export const Navbar = () => {
       e.preventDefault();
       router.push('/?membersBlocked=true');
       setMobileMenuOpen(false);
-    }
-  };*/
+    }*/
+  };
 
   useEffect(() => {
     const handleScroll = () => {
